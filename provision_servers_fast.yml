@@ -18,21 +18,20 @@
       name: "{{vlan}}"
       ipv4_cidr: "172.16.0.0/24"
 
-  - name: Get the next free public IPv4 address
+  #- name: Get the next free public IPv4 address
     #with_items: "{{servers}}"
-    nttmcp.mcp.ipam_public:
-      region: "{{region}}"
-      datacenter: "{{datacenter}}"
-      network_domain: "{{cnd}}"
+    #nttmcp.mcp.ipam_public:
+    #  region: "{{region}}"
+     # datacenter: "{{datacenter}}"
+      #network_domain: "{{cnd}}"
       #next_free_public_ipv4: false 
-      state: present
+      #state: present
 
   - name: Deploy a Linux Server
-    with_items: "{{servers}}"
     nttmcp.mcp.server:
       region: "{{region}}"
       datacenter: "{{datacenter}}"
-      name: "{{item.name}}"
+      name: "{{item}}"
       image: "Ubuntu 18.04 64-bit"
       memory_gb: 16
       disk_size: 10 #Not working
@@ -45,3 +44,25 @@
         network_domain: "{{cnd}}"
         primary_nic:
           vlan: "{{vlan}}"
+      start: True
+      wait: False
+    loop: "{{servers}}"
+    loop_control:
+      label: "Creating server: {{item}}"
+
+  - name: Wait for Servers to finish deploying
+    nttmcp.mcp.server_info:
+      region: "{{region}}"
+      datacenter: "{{datacenter}}"
+      network_domain: "{{cnd}}"
+      name: "{{item}}"
+    register: server
+    until: server.data.server[0].state|default('') == 'NORMAL'
+    retries: 100
+    delay: 15
+    loop: "{{servers}}"
+    loop_control:
+      label: "Waiting for server: {{item}}"
+
+
+

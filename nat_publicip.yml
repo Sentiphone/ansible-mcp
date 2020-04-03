@@ -4,16 +4,29 @@
   connection: local
   gather_facts: no
   tasks:
-    - name: Retrieve server info
+    - name: Retrieve server(s) info
       #with_items: "{{servers}}"
       nttmcp.mcp.server_info:
         region: "{{region}}"
         datacenter: "{{datacenter}}"
         network_domain: "{{cnd}}"
-        name: "{{item.name}}"
       register: server
-      loop: "{{servers}}"
 
 
-    - debug: msg="{{server | json_query('data[0]')}}"
+    - debug:
+        msg: "{{server| json_query('data.server[*].networkInfo.primaryNic.privateIpv4')}}"
+      register: server_list
+
+    - name: Assign public IP to server
+      nttmcp.mcp.nat:
+        region: "{{region}}"
+        datacenter: "{{datacenter}}"
+        network_domain: "{{cnd}}"
+        internal_ip: "{{item}}"
+      loop: "{{server_list.msg}}"
+      loop_control:
+        label: "Waiting for server: {{item}}"
+
+        
+
 

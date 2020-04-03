@@ -4,6 +4,6 @@ datacenter: EU6
 cnd: testing_cnd
 vlan: testing_vlan
 servers:
-    - name: linux1
-    - name: linux2 
-    - name: linux3
+    - linux1
+    - linux2
+    - linux3

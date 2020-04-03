@@ -1,0 +1,16 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+  - name: Create an IPv4 firewall rule
+    nttmcp.mcp.firewall:
+      region: "{{region}}"
+      datacenter: "{{datacenter}}"
+      network_domain: "{{cnd}}"
+      name: monitoring_rule
+      protocol: UDP
+      src_cidr: "172.16.0.0/24"
+      src_port_start: ANY
+      dst_cidr: "10.1.77.0/24"
+      dst_port_start: "80"
+      dst_port_end: "81"
