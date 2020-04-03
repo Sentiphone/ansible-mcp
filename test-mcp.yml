@@ -1,0 +1,14 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+  tasks:
+  - name: List Cloud Network Domains in EU7
+    nttmcp.mcp.network_info:
+      region: eu
+      datacenter: EU7
+    register: output
+
+  - debug: var=output
+      
+      

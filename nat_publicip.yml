@@ -1,0 +1,19 @@
+#WIP
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Retrieve server info
+      #with_items: "{{servers}}"
+      nttmcp.mcp.server_info:
+        region: "{{region}}"
+        datacenter: "{{datacenter}}"
+        network_domain: "{{cnd}}"
+        name: "{{item.name}}"
+      register: server
+      loop: "{{servers}}"
+
+
+    - debug: msg="{{server | json_query('data[0]')}}"
+
