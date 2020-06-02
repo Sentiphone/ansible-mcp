@@ -1,0 +1,20 @@
+- hosts: EU8
+  connection: local
+  gather_facts: no
+  tasks:
+    - name : Stop Jmeter
+      shell: 
+        cmd: shutdown.sh
+        chdir: ~/jmeter/bin/
+    - name: Rename file 
+      command: mv ~/jmeter/bin/jmeter.log ~/jmeter/bin/jmeter_{{ inventory_hostname }}.log
+   # - name: Store file into log_files
+     # fetch:
+     #   src: ~/jmeter/bin/jmeter_{{ inventory_hostname }}.log
+      #  dest: ./log_files
+
+   # - name: Remove file (delete file)
+    #  file:
+     #   path: ~/jmeter/bin/jmeter_{{ inventory_hostname }}.log
+      #  state: absent
+

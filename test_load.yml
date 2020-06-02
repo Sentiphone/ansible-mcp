@@ -1,0 +1,88 @@
+- hosts: EU6
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Update System
+      yum:
+        name: "*"
+        state: latest
+
+   # - name: Ensure wget package is present  (NOT NEEDED)
+     # yum:
+    #    name: wget
+   #     state: present
+
+    - name: Download java
+      get_url:
+        url: "https://download.oracle.com/otn-pub/java/jdk/14.0.1+7/664493ef4a6946b186ff29eb326336a2/jdk-14.0.1_linux-x64_bin.rpm"
+        dest: ~/
+        headers: 
+          Cookie: oraclelicense=accept-securebackup-cookie
+    - name: Install package
+      yum:
+        name: jdk-14.0.1_linux-x64_bin.rpm
+
+    - name: Download Jmeter
+      get_url: 
+        url:  http://mirror.vorboss.net/apache//jmeter/binaries/apache-jmeter-5.2.1.tgz 
+        dest: ~/
+        
+    - name: Unpack archive 
+      unarchive:
+        src: ~/apache-jmeter-5.2.1.tgz 
+        dest: ~/
+        remote_src: yes
+
+    - name: Create Symlink (if doesn't exist)
+      file: 
+        src: ~/apache-jmeter-5.2.1 
+        dest: ~/jmeter
+        state: link
+
+    - name : Set JMeter env
+      shell: echo "export JMETER_HOME=~/jmeter" >> /root/.bashrc 
+    
+    - name: Set JMeter Home env
+      shell: echo "export PATH=$PATH:$JMETER_HOME/bin" >> /root/.bashrc 
+
+    - name: Source .bashrc
+      shell: source ~/.bashrc
+
+    - name: Download Jmeter Plugins
+      get_url: 
+        url: https://jmeter-plugins.org/get/ 
+        dest: ~/jmeter/lib/ext/plugins-manager.jar
+
+    - name: Download cmdrunner
+      get_url: 
+        url:  https://repo1.maven.org/maven2/kg/apc/cmdrunner/2.2/cmdrunner-2.2.jar
+        dest: ~/jmeter/lib/cmdrunner-2.2.jar
+    
+    - name: Copy env file to remote
+      copy: 
+        src: files/setenv.sh
+        dest: ~/jmeter/bin/setenv.sh
+
+   # - name: Copy jmx file to remote
+    #  copy: 
+     #   src: files/tdf2020-1000.jmx
+      #  dest: ~/jmeter/bin/tdf2020-1000.jmx
+
+    - name: Copy Jmx file to remote
+      template:
+        src: files/tdf2020-1000-v2.j2
+        dest: ~/jmeter/bin/tdf2020-1000.jmx
+    
+
+    - name: Set file limits 
+      blockinfile: 
+        dest: /etc/security/limits.conf
+        block: |
+          * soft nofile 63374
+          * hard nofile 63374
+
+   # - name: Wait for server to restart
+    #  reboot:
+      
+
+       

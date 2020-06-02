@@ -7,10 +7,10 @@
       region: "{{region}}"
       datacenter: "{{datacenter}}"
       network_domain: "{{cnd}}"
-      name: monitoring_rule
-      protocol: UDP
-      src_cidr: "172.16.0.0/24"
+      name: monitoring_rule_all
+      protocol: TCP
+      src_cidr: "90.254.31.4"
       src_port_start: ANY
-      dst_cidr: "10.1.77.0/24"
-      dst_port_start: "80"
-      dst_port_end: "81"
+      dst_cidr: "168.128.106.48/32"
+      dst_port_start: ANY
+      dst_port_end: ANY

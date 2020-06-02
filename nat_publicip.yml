@@ -12,7 +12,6 @@
         network_domain: "{{cnd}}"
       register: server
 
-
     - debug:
         msg: "{{server| json_query('data.server[*].networkInfo.primaryNic.privateIpv4')}}"
       register: server_list
@@ -26,6 +25,24 @@
       loop: "{{server_list.msg}}"
       loop_control:
         label: "Waiting for server: {{item}}"
+    
+    - name: List NAT Rules
+      nttmcp.mcp.nat_info: 
+        region: "{{region}}"
+        datacenter: "{{datacenter}}"
+        network_domain: "{{cnd}}"
+      register: public_nat
+    
+    - debug:
+        msg: "{{public_nat| json_query('data.nat[*].externalIp')}}"
+      register: public_ip
+    
+    - name: Save Public IP addresses
+      template:
+          src: ip_list.j2
+          dest: /home/ryanp/ansible_mcp/{{datacenter}}_{{cnd}}_public_IP.txt
+        
+    
 
         
 

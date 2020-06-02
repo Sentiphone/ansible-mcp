@@ -1,9 +1,16 @@
 ---
 region: eu
 datacenter: EU6
-cnd: testing_cnd
-vlan: testing_vlan
+cnd: Load_Test_2020_2
+vlan: load_2020
 servers:
-    - linux1
-    - linux2
-    - linux3
+    - load_01
+    - load_02
+    - load_03
+    - load_04
+    - load_05
+    - load_06
+    - load_07
+    - load_08
+    - load_09
+    - load_010

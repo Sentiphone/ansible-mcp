@@ -1,0 +1,57 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Update System
+      yum:
+        name: "*"
+        state: latest
+
+   # - name: Ensure wget package is present  (NOT NEEDED)
+     # yum:
+    #    name: wget
+   #     state: present
+
+    - name: Download java
+      get_url:
+        url: "https://download.oracle.com/otn-pub/java/jdk/13.0.2+8/d4173c853231432d94f001e99d882ca7/jdk-13.0.2_linux-x64_bin.rpm"
+        dest: ~/
+        headers: 
+          Cookie: oraclelicense=accept-securebackup-cookie
+
+    - name: Install package
+      yum:
+        name: ~/jdk-13.0.2_linux-x64_bin.rpm
+
+    - name: Download Jmeter
+      get_url: https://www-eu.apache.org/dist/jmeter/binaries/apache-jmeter-5.1.1.tgz
+
+    - name: Unpack archive 
+      unarchive:
+        src: ~/apache-jmeter-5.2.1.tgz 
+        dest: ~/
+
+    - name: Create Symlink (if doesn't exist)
+      file: 
+        src: ~/apache-jmeter-5.2.1 
+        dest: $HOME/jmeter
+
+    - name : Set JMeter env
+      command: echo "export JMETER_HOME=$HOME/jmeter" >> /root/.bashrc 
+
+    - name: Set JMeter Home env
+      command: echo "export PATH=$PATH:$JMETER_HOME/bin" >> /root/.bashrc 
+    
+    - name: Source .bashrc
+      shell: source /root/.bashrc
+
+    - name: Download Jmeter Plugins
+      get_url: 
+        url: https://jmeter-plugins.org/get/ 
+        dest: $HOME/jmeter/lib/ext/plugins-manager.jar
+
+    - name: Download cmdrunner 
+      command: curl -L https://repo1.maven.org/maven2/kg/apc/cmdrunner/2.2/cmdrunner-2.2.jar > $HOME/jmeter/lib/cmdrunner-2.2.jar /root/apache-jmeter-4.0/bin/jmeter.sh -n -t /root/uci_normal/UCI_TDF_Performance_v14.jmxjava 
+
+
+

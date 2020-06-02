@@ -7,7 +7,7 @@
       region: "{{region}}"
       datacenter: "{{datacenter}}"
       name: "{{cnd}}"
-      description: "MCP Testing"
+      description: "Load Testing"
       network_type: ESSENTIALS
 
   - name: Create a VLAN
@@ -32,10 +32,10 @@
       region: "{{region}}"
       datacenter: "{{datacenter}}"
       name: "{{item}}"
-      image: "Ubuntu 18.04 64-bit"
+      image: "CentOS 7 64-bit 2 CPU"
       memory_gb: 16
       disk_size: 10 #Not working
-      admin_password: "mypassword"
+      admin_password: "Dimension2.2data"
       cpu:
         speed: HIGHPERFORMANCE # change to standard if needed
         count: 4

@@ -1,0 +1,14 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+  - name: Deploy a Linux Server
+    nttmcp.mcp.server:
+      region: "{{region}}"
+      datacenter: "{{datacenter}}"
+      network_domain: "{{cnd}}"
+      name: "{{item}}"
+      state: stop
+    loop: "{{servers}}"
+    loop_control:
+      label: "Creating server: {{item}}"

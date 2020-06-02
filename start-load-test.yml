@@ -1,0 +1,8 @@
+- hosts: EU8
+  connection: local
+  gather_facts: no
+  tasks:
+    - name : Start Jmeter
+      shell: nohup ~/jmeter/bin/jmeter -n -t ~/jmeter/bin/tdf2020-1000.jmx -l ~/jmeter/bin/jmeter.log > /dev/null 2>&1 &
+
+

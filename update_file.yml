@@ -1,0 +1,19 @@
+- hosts: EU6
+  connection: local
+  gather_facts: no
+  tasks:
+   
+
+    - name: Copy Jmx file to remote
+      template:
+        src: files/Test-20k-final.j2
+        dest: ~/jmeter/bin/tdf2020-1000.jmx
+    
+
+  
+
+   # - name: Wait for server to restart
+    #  reboot:
+      
+  
+       

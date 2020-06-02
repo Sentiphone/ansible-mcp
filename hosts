@@ -1,5 +1,35 @@
 [local]
 localhost
 
+[EU8]
+168.128.109.26
+168.128.109.27
+168.128.109.122
+168.128.109.123
+168.128.109.252
+168.128.109.253
+168.128.109.148
+168.128.109.149
+168.128.109.236
+168.128.109.237
+ 
+
+
+[EU8:vars]
+ansible_connection=ssh
+ansible_user=root
+ansible_ssh_pass=Dimension2.2data
+host_key_checking = False
+
+[EU6]
+52.236.33.146
+
+[EU6:vars]
+ansible_connection=ssh
+ansible_user=fepadmin
+ansible_ssh_pass=Dimension2.2data
+ansible_sudo_pass=Dimension2.2data
+host_key_checking = False
+ansible_become=true
 
 

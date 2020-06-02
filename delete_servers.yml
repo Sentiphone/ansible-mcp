@@ -1,0 +1,52 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+  - name: Create an Essential CND
+    nttmcp.mcp.network:
+      region: "{{region}}"
+      datacenter: "{{datacenter}}"
+      name: "{{cnd}}"
+      description: "Load Testing"
+      network_type: ESSENTIALS
+
+  - name: Create a VLAN
+    nttmcp.mcp.vlan:
+      region: "{{region}}"
+      datacenter: "{{datacenter}}"
+      network_domain: "{{cnd}}"
+      name: "{{vlan}}"
+      ipv4_cidr: "172.16.0.0/24"
+
+  #- name: Get the next free public IPv4 address
+    #with_items: "{{servers}}"
+    #nttmcp.mcp.ipam_public:
+    #  region: "{{region}}"
+     # datacenter: "{{datacenter}}"
+      #network_domain: "{{cnd}}"
+      #next_free_public_ipv4: false 
+      #state: present
+
+  - name: Deploy a Linux Server
+    nttmcp.mcp.server:
+      region: "{{region}}"
+      datacenter: "{{datacenter}}"
+      name: "{{item}}"
+      image: "CentOS 7 64-bit 2 CPU"
+      memory_gb: 16
+      disk_size: 10 #Not working
+      admin_password: "mypassword"
+      cpu:
+        speed: HIGHPERFORMANCE # change to standard if needed
+        count: 4
+        coresPerSocket: 4
+      network_info:
+        network_domain: "{{cnd}}"
+        primary_nic:
+          vlan: "{{vlan}}"
+      state: absent    
+      wait: False
+    loop: "{{servers}}"
+    loop_control:
+      label: "Deleting server: {{item}}"
+
